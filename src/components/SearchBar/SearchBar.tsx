@@ -1,12 +1,15 @@
 import styles from "./SearchBar.module.css";
 
+interface SearchBarProps {
+    onSearch: (query: string) => void;
+}
 
-export default function SearchBar() {
+
+export default function SearchBar({ onSearch }: SearchBarProps) {
 
     const handleSubmit = (formData: FormData) => {
-        console.log("handleSubmit", formData)
-        const values = Object.fromEntries(formData);
-        console.log(values);
+        const query = formData.get("query") as string;
+        onSearch(query);
     }
 
 

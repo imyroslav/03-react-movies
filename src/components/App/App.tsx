@@ -1,9 +1,11 @@
 import { useState } from "react";
-
+import toast, { Toaster } from "react-hot-toast";
 import css from "./App.module.css"
 import SearchBar from "../SearchBar/SearchBar";
 import MovieGrid from "../MovieGrid/MovieGrid";
 import MovieModal from "../MovieModal/MovieModal";
+import Loader from "../Loader/Loader";
+import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import { fetchMovies } from "../../services/movieService";
 import { type Movie } from "../../types/movie"
 
@@ -12,6 +14,11 @@ export default function App() {
 
     const [movies, setMovies] = useState<Movie[]>([]);
     const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null)
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(false);
+    const notifyError = () =>
+        toast.error("Didn't find movies on your request");
+
 
     const openModal = (movies: Movie) => {
         setSelectedMovie(movies);
@@ -22,15 +29,30 @@ export default function App() {
     };
 
     const handleSearch = async (newQuery: string) => {
-        const newMovies = await fetchMovies(newQuery);
-        setMovies(newMovies)
-    }
+        try {
+            setIsLoading(true);
+            setError(false);
+            const newMovies = await fetchMovies(newQuery);
+            if (newMovies.length === 0) {
+                notifyError();
+            }
+            setMovies(newMovies);
+        } catch {
+            setError(true);
+            setMovies([]);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     return (
         <div className={css.app}>
             <SearchBar onSearch={handleSearch} />
-            <MovieGrid onSelect={openModal} movies={movies} /> 
-            <MovieModal onClose={closeModal} movie={selectedMovie} />
+            <Toaster />
+            {isLoading && <Loader />}
+            {error && <ErrorMessage />}
+            {movies.length > 0 && <MovieGrid onSelect={openModal} movies={movies} />}
+            {selectedMovie !== null && (<MovieModal onClose={closeModal} movie={selectedMovie} />)}   
         </div>
         
     )

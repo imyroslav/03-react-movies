@@ -9,7 +9,7 @@ export interface GetMovies {
 export const reqConfig = {
     url: "https://api.themoviedb.org/3/search/movie",
     headers: {
-        accept: "aplication/json",
+        accept: "application/json",
         Authorization: `Bearer ${import.meta.env.VITE_ACCESS_TOKEN}`
     }
 }

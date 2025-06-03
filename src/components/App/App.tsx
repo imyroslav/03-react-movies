@@ -16,8 +16,8 @@ export default function App() {
     const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null)
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(false);
-    const notifyError = () =>
-        toast.error("Didn't find movies on your request");
+    // const notifyError = () =>
+        
 
 
     const openModal = (movie: Movie) => {
@@ -34,7 +34,7 @@ export default function App() {
             setError(false);
             const newMovies = await fetchMovies(newQuery);
             if (newMovies.length === 0) {
-                notifyError();
+            toast.error("No any movies found on your request")
             }
             setMovies(newMovies);
         } catch {

@@ -20,8 +20,8 @@ export default function App() {
         toast.error("Didn't find movies on your request");
 
 
-    const openModal = (movies: Movie) => {
-        setSelectedMovie(movies);
+    const openModal = (movie: Movie) => {
+        setSelectedMovie(movie);
     };
 
     const closeModal = () => {
